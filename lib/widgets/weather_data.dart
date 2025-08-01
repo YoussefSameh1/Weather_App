@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/cubit/weather_cubit.dart';
 import 'package:weather_app/models/weather_model.dart';
 
 class WeatherData extends StatelessWidget {
-  const WeatherData({super.key, required this.weatherModel});
-
-  final WeatherModel weatherModel;
+  const WeatherData({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Weather App',style: TextStyle(fontWeight: FontWeight.bold),),
-        backgroundColor: weatherModel.getThemeColor()[200],
-      ),
-      body: Container(
+    WeatherModel weatherModel = BlocProvider.of<WeatherCubit>(context).weatherModel!;
+    
+    return Container(
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              weatherModel.getThemeColor(),
-              weatherModel.getThemeColor()[300]!,
-              weatherModel.getThemeColor()[100]!,
+              weatherModel.getThemeColor(BlocProvider.of<WeatherCubit>(context).weatherModel!.weatherStateName)[100]!,
+              weatherModel.getThemeColor(BlocProvider.of<WeatherCubit>(context).weatherModel!.weatherStateName)[300]!,
+              weatherModel.getThemeColor(BlocProvider.of<WeatherCubit>(context).weatherModel!.weatherStateName),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -78,7 +75,6 @@ class WeatherData extends StatelessWidget {
             Spacer(flex: 5),
           ],
         ),
-      ),
-    );
+      );
   }
 }

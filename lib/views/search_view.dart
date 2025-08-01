@@ -1,9 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/weather_model.dart';
-import 'package:weather_app/service/weather_service.dart';
-import 'package:weather_app/widgets/weather_data.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/cubit/weather_cubit.dart';
 
 // ignore: must_be_immutable
 class SearchView extends StatelessWidget {
@@ -37,29 +36,10 @@ class SearchView extends StatelessWidget {
           child: TextField(
             onSubmitted: (data) async {
               cityName = data;
-
-              try {
-                WeatherModel weatherModel = await WeatherService().getWeather(
-                  cityName: cityName!,
-                );
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => WeatherData(weatherModel: weatherModel),
-                  ),
-                );
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'City not found. Please enter a valid city name.',
-                    ),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
+              BlocProvider.of<WeatherCubit>(
+                context,
+              ).getWeather(cityName: cityName!);
+              Navigator.pop(context);
             },
             decoration: const InputDecoration(
               labelText: 'Search',
